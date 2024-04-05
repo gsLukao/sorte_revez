@@ -15,22 +15,22 @@ function gsales()
     if not processo then
         if emP.checkPayment() then
             processo = true
-            TriggerEvent("Notify", "success", "Você tentou a sorte!") -- Notificação de sucesso
+            TriggerEvent("Notify", "success", "Você tentou a sorte!") 
             print('GSLUKÂO| Comunidade')
         end
     else
-        local tempo_restante = segundos / 60 -- Converte segundos para minutos
+        local tempo_restante = segundos / 60 
         local minutos = math.floor(tempo_restante)
         local segundos_restantes = math.floor((tempo_restante - minutos) * 60)
         local mensagem = string.format("Você já tentou a sorte recentemente. Tente novamente depois!.", minutos, segundos_restantes)
-        TriggerEvent("Notify", "aviso", mensagem) -- Notificação de aviso com o tempo restante
+        TriggerEvent("Notify", "aviso", mensagem) 
     end
 end
 
 
 RegisterNetEvent('notificarItemFicha')
 AddEventHandler('notificarItemFicha', function()
-    -- Código para exibir a notificação ao jogador
+    
     TriggerEvent('chat:addMessage', {
         color = {255, 0, 0},
         multiline = true,
