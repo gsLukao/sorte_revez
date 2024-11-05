@@ -4,25 +4,26 @@ vRP = Proxy.getInterface("vRP")
 Tunnel.bindInterface("sorte_revez")
 emP = Tunnel.getInterface("sorte_revez")
 
-local processo = false
-local segundos = 1
+local cooldown = 60 
+local segundos = 0 
+
 
 RegisterCommand("box", function()
-    gsales()
+    tentarSorte()
 end)
 
-function gsales()
-    if not processo then
+function tentarSorte()
+    if segundos == 0 then
         if emP.checkPayment() then
-            processo = true
+            segundos = cooldown
             TriggerEvent("Notify", "success", "Você tentou a sorte!") 
             print('GSLUKÂO| Comunidade')
         end
     else
-        local tempo_restante = segundos / 60 
-        local minutos = math.floor(tempo_restante)
-        local segundos_restantes = math.floor((tempo_restante - minutos) * 60)
-        local mensagem = string.format("Você já tentou a sorte recentemente. Tente novamente depois!.", minutos, segundos_restantes)
+
+        local minutos = math.floor(segundos / 60)
+        local segundos_restantes = segundos % 60
+        local mensagem = string.format("Você já tentou a sorte recentemente. Tente novamente em %d minutos e %d segundos.", minutos, segundos_restantes)
         TriggerEvent("Notify", "aviso", mensagem) 
     end
 end
@@ -30,7 +31,6 @@ end
 
 RegisterNetEvent('notificarItemFicha')
 AddEventHandler('notificarItemFicha', function()
-    
     TriggerEvent('chat:addMessage', {
         color = {255, 0, 0},
         multiline = true,
@@ -41,13 +41,11 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(1000)
         if segundos > 0 then
             segundos = segundos - 1
-            if segundos == 0 then
-                processo = false
-            end
+            Citizen.Wait(1000)
+        else
+            Citizen.Wait(5000)
         end
     end
 end)
-
